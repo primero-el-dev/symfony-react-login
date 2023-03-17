@@ -11,7 +11,7 @@ export default function (props) {
             <Row>
                 <Col md={{ span: 8, offset: 2 }} lg={{ span: 6, offset: 3 }}>
                     <h1 className="mb-3">Logowanie</h1>
-                    <LoginForm action={props.action} redirectUri={props.redirectUri}/>
+                    <LoginForm action={props.action} redirectUri={props.redirectUri} csrfToken={props.csrfToken}/>
                 </Col>
             </Row>
         </Container>

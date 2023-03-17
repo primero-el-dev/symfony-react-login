@@ -3,5 +3,5 @@
 {% block title %}Login{% endblock %}
 
 {% block body %}
-    <div {{ react_component('LoginPage', { action: apiLoginUri, redirectUri: redirectUri }) }}></div>
+    <div {{ react_component('LoginPage', { action: apiLoginUri, redirectUri: redirectUri, csrfToken: csrf_token('authenticate') }) }}></div>
 {% endblock %}

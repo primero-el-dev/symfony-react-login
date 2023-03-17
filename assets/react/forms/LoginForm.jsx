@@ -1,7 +1,7 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { API_TOKEN_STORAGE_KEY } from '../config.jsx'
+import { API_TOKEN_STORAGE_KEY, CSRF_TOKEN_INPUT_NAME } from '../config.jsx'
 
 
 export default class LoginForm extends React.Component {
@@ -10,6 +10,7 @@ export default class LoginForm extends React.Component {
         super(props)
         this.action = props.action
         this.redirectUri = props.redirectUri
+        this.csrfToken = props.csrfToken
         this.state = {
             errorMessage: '',
             waitingForResponse: false
@@ -26,6 +27,7 @@ export default class LoginForm extends React.Component {
         try {
             const email = event.target.querySelector('[name="email"]').value
             const password = event.target.querySelector('[name="password"]').value
+            const csrfToken = event.target.querySelector(`[name="${CSRF_TOKEN_INPUT_NAME}"]`).value
 
             const response = await fetch(this.action, {
                 method: 'POST',
@@ -36,16 +38,19 @@ export default class LoginForm extends React.Component {
                 body: JSON.stringify({
                     username: email,
                     password: password,
+                    [CSRF_TOKEN_INPUT_NAME]: csrfToken,
                 })
             })
             const data = await response.json()
 
-            if (data.token) {
-                localStorage.setItem(API_TOKEN_STORAGE_KEY, data.token)
-
+            // console.error(await response)
+            // console.error(await response.json())
+            if (response.status === 200) {
                 window.location.href = this.redirectUri
             } else if (data.message !== undefined) {
                 this.setState({ errorMessage: data.message })
+            } else {
+                this.setState({ errorMessage: 'Spróbuj ponownie' })
             }
         } catch (e) {
             console.error(e)
@@ -67,6 +72,8 @@ export default class LoginForm extends React.Component {
                     <Form.Label>Hasło</Form.Label>
                     <Form.Control type="password" name="password" placeholder="Wpisz hasło" required />
                 </Form.Group>
+
+                <input type="hidden" name={CSRF_TOKEN_INPUT_NAME} value={this.csrfToken} />
 
                 <div id="errorMessage" className="d-hidden text-danger mb-2">{this.state.errorMessage}</div>
                 
