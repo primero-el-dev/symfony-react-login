@@ -43,8 +43,6 @@ export default class LoginForm extends React.Component {
             })
             const data = await response.json()
 
-            // console.error(await response)
-            // console.error(await response.json())
             if (response.status === 200) {
                 window.location.href = this.redirectUri
             } else if (data.message !== undefined) {
