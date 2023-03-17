@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div {{ react_component('LoginPage', { action: apiLoginUri, redirectUri: redirectUri }) }}></div>
+{% endblock %}
